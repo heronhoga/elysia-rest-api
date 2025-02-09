@@ -33,8 +33,13 @@ export async function createLaptop({ body, set, error }: any) {
       return error(400, "Bad request!");
     }
 
-    const createLaptop =
+    const createLaptop:any[] =
       await db.$queryRaw`INSERT INTO "Laptop" (id_laptop, brand, description, price) VALUES (gen_random_uuid(), ${body.brand}, ${body.description}, ${body.price}) RETURNING *`;
+
+    if (createLaptop.length === 0) {
+        set.status = 500
+        return "Error creating Laptop data"
+    }
 
     return createLaptop;
   } catch (error: any) {
@@ -60,7 +65,7 @@ export async function updateLaptop({ params: { id }, body, set, error }: any) {
         ? newLaptop.description
         : oldLaptopData[0].description,
       price: newLaptop.price ? newLaptop.price : oldLaptopData[0].price,
-      updated_at: new Date()
+      updated_at: new Date(),
     };
 
     //update laptop data
@@ -72,5 +77,23 @@ export async function updateLaptop({ params: { id }, body, set, error }: any) {
     console.log(error);
     set.status(500);
     return "Internal server error";
+  }
+}
+
+export async function deleteLaptop({ params: { id }, set, error }: any) {
+  try {
+    const deleteLaptop:any[] =
+      await db.$queryRaw`DELETE FROM "Laptop" WHERE id_laptop = ${id} RETURNING id_laptop`;
+
+    if (deleteLaptop.length === 0) {
+      set.status = 500;
+      return "Error lur";
+    }
+
+    return deleteLaptop
+  } catch (error) {
+    console.log(error);
+    set.status = 500;
+    return "Internal server error!";
   }
 }
