@@ -60,11 +60,12 @@ export async function updateLaptop({ params: { id }, body, set, error }: any) {
         ? newLaptop.description
         : oldLaptopData[0].description,
       price: newLaptop.price ? newLaptop.price : oldLaptopData[0].price,
+      updated_at: new Date()
     };
 
     //update laptop data
     const updateLaptop =
-      await db.$queryRaw`UPDATE "Laptop" set brand = ${updatedLaptop.brand}, description = ${updatedLaptop.description}, price = ${updatedLaptop.price} WHERE id_laptop = ${id} RETURNING *`;
+      await db.$queryRaw`UPDATE "Laptop" set brand = ${updatedLaptop.brand}, description = ${updatedLaptop.description}, price = ${updatedLaptop.price}, updated_at = ${updatedLaptop.updated_at} WHERE id_laptop = ${id} RETURNING *`;
 
     return updateLaptop;
   } catch (error) {
