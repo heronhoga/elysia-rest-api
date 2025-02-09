@@ -8,10 +8,10 @@ datasource db {
 }
 
 model Laptop {
-  id_laptop   String   @id @default(uuid())
-  brand       String
-  description String
-  price       String
-  createdAt   DateTime @default(now())
-  UpdatedAt   DateTime @updatedAt
+  id_laptop   String  @id @default(uuid())
+  brand       String?
+  description String?
+  price       String?
+  created_at  DateTime? @default(now())
+  updated_at  DateTime? @default(now())
 }
